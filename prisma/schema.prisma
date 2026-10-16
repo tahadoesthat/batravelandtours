@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PlanStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum QueryStatus {
+  UNREAD
+  IN_PROGRESS
+  RESOLVED
+}
+
+enum ChangelogAction {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+model TravelPlan {
+  id               String     @id @default(cuid())
+  title            String
+  slug             String     @unique
+  destination      String
+  category         String     @default("Destinations")
+  primeThumbnail   String
+  images           String[]
+  shortDescription String     @db.VarChar(300)
+  content          String     @db.Text
+  readingTime      Int        @default(5)
+  status           PlanStatus @default(DRAFT)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([status, createdAt])
+  @@index([slug])
+}
+
+model Query {
+  id            String      @id @default(cuid())
+  senderName    String
+  email         String
+  phone         String
+  targetPackage String?
+  message       String      @db.Text
+  status        QueryStatus @default(UNREAD)
+  createdAt     DateTime    @default(now())
+
+  @@index([status, createdAt])
+}
+
+model ChangelogEntry {
+  id           String          @id @default(cuid())
+  action       ChangelogAction
+  packageTitle String
+  performedBy  String          @default("Bilawal Abdullah")
+  createdAt    DateTime        @default(now())
+
+  @@index([createdAt])
+}
+
+model AdminProfile {
+  id          String   @id @default("singleton")
+  name        String   @default("Bilawal Abdullah")
+  phone       String   @default("+1 (555) 019-2834")
+  description String   @db.VarChar(300) @default("Travel photographer, storyteller, and explorer sharing honest advice and bespoke itineraries.")
+  avatarUrl   String   @default("/images/default-avatar.png")
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteVisit {
+  id          String   @id @default(cuid())
+  path        String
+  countryCode String   @default("US")
+  countryName String   @default("United States")
+  ipHash      String?
+  visitedAt   DateTime @default(now())
+
+  @@index([visitedAt])
+}
