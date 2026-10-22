@@ -9,6 +9,7 @@ import Footer from '@/components/public/Footer';
 import WhatsAppCTA from '@/components/public/WhatsAppCTA';
 import VisaDossierView from '@/components/public/visa/VisaDossierView';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface VisaDetailPageProps {

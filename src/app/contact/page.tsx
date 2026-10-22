@@ -9,6 +9,9 @@ import WhatsAppCTA from '@/components/public/WhatsAppCTA';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Contact the Atelier | Bilawal Abdullah Travels',
   description:

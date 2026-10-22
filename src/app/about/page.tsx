@@ -9,6 +9,9 @@ import WhatsAppCTA from '@/components/public/WhatsAppCTA';
 import Link from 'next/link';
 import { ArrowRight, Compass, ShieldCheck, HeartHandshake } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'About the Atelier & Bilawal Abdullah | Bilawal Abdullah Travels',
   description:

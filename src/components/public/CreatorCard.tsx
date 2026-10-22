@@ -20,11 +20,17 @@ export default function CreatorCard({ adminProfile }: CreatorCardProps) {
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 text-center sm:text-left">
         {/* 80px - 96px Circular Avatar */}
         <div className="relative flex-shrink-0">
-          <img
-            src={adminProfile.avatarUrl}
-            alt={adminProfile.name}
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover ring-4 ring-brand-emerald/15 shadow-sm"
-          />
+          {adminProfile.avatarUrl ? (
+            <img
+              src={adminProfile.avatarUrl}
+              alt={adminProfile.name}
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover ring-4 ring-brand-emerald/15 shadow-sm"
+            />
+          ) : (
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center text-2xl font-serif font-bold ring-4 ring-brand-emerald/15 shadow-sm">
+              {(adminProfile.name || 'BA').split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase()}
+            </div>
+          )}
           <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-brand-emerald text-white flex items-center justify-center text-xs shadow">
             ★
           </div>
@@ -61,11 +67,18 @@ export default function CreatorCard({ adminProfile }: CreatorCardProps) {
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-brand-slate pt-4 border-t border-brand-stone">
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-brand-emerald" />
-              <span>Bali, Indonesia • Worldwide Expeditions</span>
+              <span>Consular Advisory • Worldwide Expeditions</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-brand-emerald" />
-              <span>{adminProfile.phone}</span>
+              <a
+                href={`https://wa.me/${(adminProfile.phone || '').replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-brand-emerald transition font-medium"
+              >
+                {adminProfile.phone}
+              </a>
             </div>
           </div>
         </div>

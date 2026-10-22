@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma, getOrCreateAdminProfile } from '@/lib/prisma';
 import { getAdminSession } from '@/lib/auth';
 
@@ -44,6 +45,16 @@ export async function PUT(request: Request) {
           'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
       },
     });
+
+    try {
+      revalidatePath('/about');
+      revalidatePath('/contact');
+      revalidatePath('/');
+      revalidatePath('/visas');
+      revalidatePath('/visas/[slug]', 'page');
+    } catch (e) {
+      console.warn('revalidatePath warning:', e);
+    }
 
     return NextResponse.json({ success: true, profile });
   } catch (error: any) {
