@@ -12,23 +12,23 @@ export default function TopBar() {
         {/* Left Notice */}
         <div className="flex items-center space-x-2">
           <Plane className="w-3.5 h-3.5 text-[#869b93]" />
-          <span>Never stop exploring the world!</span>
+          <span>Your Journey Our Passion</span>
         </div>
 
         {/* Center Location */}
         <div className="flex items-center space-x-1.5 hidden sm:flex">
           <MapPin className="w-3.5 h-3.5 text-[#869b93]" />
-          <span>Based in Bali, Indonesia</span>
+          <span>Based in Lahore, Pakistan</span>
         </div>
 
         {/* Right Contact & Admin Link */}
         <div className="flex items-center space-x-6">
           <a
             className="hover:text-white transition flex items-center gap-1.5"
-            href="mailto:hello@bilawalabdullah.com"
+            href="mailto:bookings@batravelandtour.com"
           >
             <Mail className="w-3.5 h-3.5" />
-            <span>hello@bilawalabdullah.com</span>
+            <span>bookings@batravelandtour.com</span>
           </a>
           <div className="flex items-center space-x-3 text-gray-400">
             <span className="hover:text-white transition cursor-pointer">

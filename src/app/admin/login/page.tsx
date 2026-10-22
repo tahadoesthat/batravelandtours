@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
@@ -44,17 +45,19 @@ export default function AdminLoginPage() {
     <div className="min-h-screen bg-brand-alabaster flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 rounded-full border border-brand-stone bg-white text-brand-emerald flex items-center justify-center mx-auto mb-4 shadow-sm">
-            <svg className="w-7 h-7 fill-current" viewBox="0 0 24 24">
-              <path d="M14 6l-3.8 5.7 1.5 2.2L10 16.5 4 19h16l-6-13zm-5.7 7.7L10 11.2l2.3 3.5-4 1.3v-2.3z" />
-            </svg>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <div className="bg-white rounded-2xl border border-brand-stone p-3 inline-flex items-center justify-center shadow-sm mb-3">
+            <Image
+              src="/images/logo.svg"
+              alt="BA Travel & Tours"
+              width={180}
+              height={58}
+              className="h-12 w-auto object-contain"
+              priority
+            />
           </div>
-          <h1 className="font-serif text-3xl font-bold text-brand-charcoal">
-            Bilawal Abdullah
-          </h1>
-          <p className="text-xs uppercase tracking-[0.25em] font-semibold text-brand-emerald mt-1">
-            Travel Atelier & Admin Portal
+          <p className="text-xs uppercase tracking-[0.25em] font-semibold text-brand-emerald">
+            Admin Workspace Portal
           </p>
         </div>
 

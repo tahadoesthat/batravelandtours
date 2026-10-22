@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
@@ -98,17 +99,22 @@ export default function AdminSidebar({
       <aside className="w-60 bg-white border-r border-brand-stone h-screen sticky top-0 flex flex-col justify-between select-none z-30">
         {/* Top Header */}
         <div>
-          <div className="p-6 border-b border-brand-stone">
+          <div className="p-5 border-b border-brand-stone">
             <Link href="/" className="group block">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-serif text-lg font-bold text-brand-charcoal tracking-tight group-hover:text-brand-emerald transition">
-                  Bilawal Abdullah
-                </span>
+              <div className="flex items-center justify-between mb-2">
+                <Image
+                  src="/images/logo.svg"
+                  alt="BA Travel & Tours"
+                  width={140}
+                  height={44}
+                  className="h-9 w-auto object-contain transition-transform group-hover:scale-105"
+                  priority
+                />
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between pt-1">
                 <span className="text-[10px] tracking-wider uppercase font-semibold text-brand-slate">
-                  Travel Atelier Admin
+                  Admin Workspace
                 </span>
                 <span className="text-[9px] bg-brand-alabaster border border-brand-stone text-brand-emerald px-1.5 py-0.5 rounded-full font-bold">
                   PRO

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Mail, ArrowRight, Instagram, Facebook, Twitter, Check } from 'lucide-react';
 
 export default function Footer() {
@@ -62,16 +63,17 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-[#233530]">
           {/* Brand Col */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-full border border-gray-600 flex items-center justify-center bg-gray-800 text-white">
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M14 6l-3.8 5.7 1.5 2.2L10 16.5 4 19h16l-6-13zm-5.7 7.7L10 11.2l2.3 3.5-4 1.3v-2.3z" />
-                </svg>
+            <Link href="/" className="inline-block mb-4">
+              <div className="bg-white rounded-xl p-2 inline-flex items-center shadow-sm">
+                <Image
+                  src="/images/logo.svg"
+                  alt="BA Travel and Tours"
+                  width={160}
+                  height={50}
+                  className="h-10 w-auto object-contain"
+                />
               </div>
-              <span className="font-serif text-2xl font-bold tracking-tight">
-                Bilawal Abdullah
-              </span>
-            </div>
+            </Link>
             <p className="text-gray-400 text-xs leading-relaxed max-w-sm mb-6">
               A private luxury travel publication and expedition atelier dedicated to architectural stillness, honest stories, and bespoke global journeys.
             </p>
@@ -95,6 +97,11 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li>
+                <Link href="/visas" className="hover:text-emerald-300 transition font-semibold text-emerald-400/90 flex items-center gap-1.5">
+                  <span>Visa Requirements (9 Guides)</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/?category=Destinations#latest" className="hover:text-white transition">
                   Signature Destinations
                 </Link>
@@ -106,7 +113,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/?category=Travel Tips#latest" className="hover:text-white transition">
-                  Travel Tips & Gear
+                  Travel Tips &amp; Gear
                 </Link>
               </li>
               <li>
@@ -125,7 +132,9 @@ export default function Footer() {
             <ul className="space-y-2.5 text-xs text-gray-400">
               <li className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-emerald-400" />
-                <span>hello@bilawalabdullah.com</span>
+                <a href="mailto:bookings@batravelandtour.com" className="hover:text-emerald-300 transition">
+                  bookings@batravelandtour.com
+                </a>
               </li>
               <li>
                 <Link href="/admin" className="hover:text-emerald-300 transition">
@@ -143,7 +152,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500 gap-4">
-          <p>© {new Date().getFullYear()} Bilawal Abdullah Travels. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} BA Travel &amp; Tours. All rights reserved.</p>
           <div className="flex items-center space-x-6">
             <span>Privacy Policy</span>
             <span>Terms of Editorial</span>

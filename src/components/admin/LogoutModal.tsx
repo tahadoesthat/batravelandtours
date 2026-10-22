@@ -32,7 +32,7 @@ export default function LogoutModal({
               <LogOut className="w-4 h-4 text-brand-crimson" />
             </div>
             <h3 id="logout-title" className="font-serif text-lg font-bold text-brand-charcoal">
-              Sign out of Bilawal Abdullah Travels?
+              Sign out of BA Travel &amp; Tours?
             </h3>
           </div>
           <button
