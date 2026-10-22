@@ -46,7 +46,12 @@ import {
 
 interface VisaDossierViewProps {
   country: VisaCountryData;
-  adminPhone?: string;
+  adminProfile?: {
+    name: string;
+    phone: string;
+    avatarUrl: string;
+    description: string;
+  };
 }
 
 // Icon mapper for dynamic insights
@@ -80,8 +85,18 @@ const iconMap: Record<string, React.ReactNode> = {
 
 export default function VisaDossierView({
   country,
-  adminPhone = '+923008453303',
+  adminProfile,
 }: VisaDossierViewProps) {
+  const profileName = adminProfile?.name || 'Bilawal Abdullah';
+  const profilePhone = adminProfile?.phone || '+92 300 8453303';
+  const profileAvatar = adminProfile?.avatarUrl || '/images/default-avatar.png';
+  const initials = profileName
+    .split(' ')
+    .filter(Boolean)
+    .map((n) => n[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase() || 'BA';
   // Checklist State for Readiness Gauge
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
   const [openFaq, setOpenFaq] = useState<number | null>(0);
@@ -182,9 +197,9 @@ export default function VisaDossierView({
   };
 
   // WhatsApp formatted URL
-  const cleanPhone = adminPhone.replace(/[^0-9]/g, '');
+  const cleanPhone = profilePhone.replace(/[^0-9]/g, '');
   const waMessage = encodeURIComponent(
-    `Hello Bilawal Abdullah Travels! I am inquiring about the ${country.name} Visa Document Requirements and would like to initiate my dossier review.`
+    `Hello ${profileName} Travels! I am inquiring about the ${country.name} Visa Document Requirements and would like to initiate my dossier review.`
   );
   const waUrl = `https://wa.me/${cleanPhone || '923008453303'}?text=${waMessage}`;
 
@@ -236,7 +251,7 @@ export default function VisaDossierView({
             <div className="flex flex-col sm:flex-row lg:flex-col gap-2 shrink-0 bg-brand-alabaster p-4 rounded-xl border border-brand-stone/60">
               <div className="flex items-center gap-2.5 text-xs text-brand-slate">
                 <ShieldCheck className="w-4 h-4 text-brand-emerald shrink-0" />
-                <span>Curated by Bilawal Abdullah</span>
+                <span>Curated by {profileName}</span>
               </div>
               <div className="flex items-center gap-2.5 text-xs text-brand-slate">
                 <Building2 className="w-4 h-4 text-brand-emerald shrink-0" />
@@ -589,20 +604,19 @@ export default function VisaDossierView({
             {/* Atelier Visual Break: Editorial Quote Dossier Banner */}
             <div className="rounded-2xl p-6 sm:p-8 bg-brand-alabaster border border-brand-stone/80">
               <div className="flex flex-col sm:flex-row items-center gap-6">
-                <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden bg-brand-stone/50 border-2 border-brand-emerald/20 relative">
-                  <Image
-                    src="/images/bilawal-portrait.jpg"
-                    alt="Bilawal Abdullah"
-                    fill
-                    className="object-cover"
-                    sizes="80px"
-                    onError={(e: any) => {
-                      // Fallback placeholder image if not found
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-brand-emerald/10 flex items-center justify-center font-serif text-xl font-bold text-brand-emerald">
-                    BA
+                <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden bg-brand-stone/50 border-2 border-brand-emerald/20 relative flex items-center justify-center">
+                  {profileAvatar ? (
+                    <img
+                      src={profileAvatar}
+                      alt={profileName}
+                      className="w-full h-full object-cover"
+                      onError={(e: any) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-brand-emerald/10 flex items-center justify-center font-serif text-xl font-bold text-brand-emerald -z-10">
+                    {initials}
                   </div>
                 </div>
                 <div>
@@ -610,7 +624,7 @@ export default function VisaDossierView({
                     &ldquo;The {country.name} visa process is not a matter of luck; it is a discipline of evidentiary coherence. Every financial transaction and stamped passport leaf must tell the singular, unyielding truth of your intent to return.&rdquo;
                   </p>
                   <span className="text-xs tracking-widest uppercase text-brand-emerald font-semibold block">
-                    Bilawal Abdullah — Principal, Consular Atelier
+                    {profileName} — Principal, Consular Atelier
                   </span>
                 </div>
               </div>

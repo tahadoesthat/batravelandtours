@@ -42,7 +42,7 @@ export default async function AboutPage() {
             Curated Expeditions, Stillness &amp; Consular Rigor
           </h1>
           <p className="font-sans text-brand-slate text-sm sm:text-base leading-relaxed">
-            Bilawal Abdullah Travels was born from a desire to bring architectural elegance, honest storytelling, and meticulous consular precision to the world of bespoke luxury journeys.
+            {adminProfile.name || 'Bilawal Abdullah'} Travels was born from a desire to bring architectural elegance, honest storytelling, and meticulous consular precision to the world of bespoke luxury journeys.
           </p>
         </div>
 

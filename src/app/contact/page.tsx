@@ -17,8 +17,10 @@ export const metadata: Metadata = {
 
 export default async function ContactPage() {
   const adminProfile = await getOrCreateAdminProfile();
-  const cleanPhone = adminProfile.phone ? adminProfile.phone.replace(/[^0-9]/g, '') : '923008453303';
-  const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hello Bilawal Abdullah Travels! I would like to get in touch regarding bespoke travel or visa assistance.')}`;
+  const authorName = adminProfile.name || 'Bilawal Abdullah';
+  const authorPhone = adminProfile.phone || '+92 300 8453303';
+  const cleanPhone = authorPhone.replace(/[^0-9]/g, '');
+  const waUrl = `https://wa.me/${cleanPhone || '923008453303'}?text=${encodeURIComponent(`Hello ${authorName} Travels! I would like to get in touch regarding bespoke travel or visa assistance.`)}`;
 
   return (
     <main className="min-h-screen bg-brand-alabaster flex flex-col selection:bg-brand-emerald selection:text-white">
@@ -41,7 +43,7 @@ export default async function ContactPage() {
             <span>Direct Concierge Desk</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-5xl text-brand-charcoal mb-4">
-            Connect With Bilawal's Atelier
+            Connect With {authorName}&apos;s Atelier
           </h1>
           <p className="font-sans text-brand-slate text-sm sm:text-base leading-relaxed">
             Whether you are embarking on a private expedition across the Amalfi Coast or preparing a Canadian or Schengen visa dossier, our consultation desk is here to assist.
@@ -59,9 +61,12 @@ export default async function ContactPage() {
               <h3 className="font-serif text-lg font-semibold text-brand-charcoal mb-1">
                 WhatsApp Desk
               </h3>
-              <p className="text-xs text-brand-slate mb-4">
+              <p className="text-xs text-brand-slate mb-2">
                 Instant preliminary scan review, inquiries &amp; rapid correspondence.
               </p>
+              <span className="text-xs font-mono font-semibold text-brand-charcoal block mb-3">
+                {authorPhone}
+              </span>
             </div>
             <a
               href={waUrl}

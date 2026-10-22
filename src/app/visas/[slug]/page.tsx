@@ -69,7 +69,7 @@ export default async function VisaDetailPage({ params }: VisaDetailPageProps) {
       <Header />
 
       {/* 3. High-Fidelity Consular Dossier View */}
-      <VisaDossierView country={country} adminPhone={adminProfile.phone} />
+      <VisaDossierView country={country} adminProfile={adminProfile} />
 
       {/* 4. Floating WhatsApp CTA */}
       <WhatsAppCTA phoneNumber={adminProfile.phone} variant="floating" />

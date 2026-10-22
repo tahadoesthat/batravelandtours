@@ -99,18 +99,33 @@ export async function uploadMediaFile(
     };
   }
 
-  // 3. Fallback to local /public/uploads
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-  await fs.mkdir(uploadDir, { recursive: true });
-  const filePath = path.join(uploadDir, filename);
-  await fs.writeFile(filePath, buffer);
+  // 3. Fallback: try local filesystem, or gracefully fallback to Base64 Data URL on read-only serverless hosts (e.g. Vercel)
+  try {
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    await fs.mkdir(uploadDir, { recursive: true });
+    const filePath = path.join(uploadDir, filename);
+    await fs.writeFile(filePath, buffer);
 
-  return {
-    url: `/uploads/${filename}`,
-    filename,
-    size: buffer.length,
-    mimeType,
-  };
+    return {
+      url: `/uploads/${filename}`,
+      filename,
+      size: buffer.length,
+      mimeType,
+    };
+  } catch (fsError: any) {
+    // If running in a read-only serverless environment (e.g. Vercel Lambda where code directory is read-only)
+    // Convert directly to an inline base64 data URL so the image saves and displays seamlessly!
+    console.warn('Filesystem write not permitted (serverless/read-only). Falling back to Base64 data URL:', fsError?.message);
+    const base64 = buffer.toString('base64');
+    const dataUrl = `data:${mimeType};base64,${base64}`;
+
+    return {
+      url: dataUrl,
+      filename,
+      size: buffer.length,
+      mimeType,
+    };
+  }
 }
 
 export { ALLOWED_MIME_TYPES, MAX_FILE_SIZE };
