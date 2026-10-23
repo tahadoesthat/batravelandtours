@@ -58,6 +58,7 @@ export async function PUT(
       shortDescription,
       content,
       status,
+      overview,
     } = body;
 
     let newSlug = existing.slug;
@@ -85,6 +86,7 @@ export async function PUT(
           content: content !== undefined ? content : existing.content,
           readingTime: updatedReadingTime,
           status: status ? (status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT') : existing.status,
+          overview: overview !== undefined ? overview : (existing as any).overview,
         },
       }),
       prisma.changelogEntry.create({

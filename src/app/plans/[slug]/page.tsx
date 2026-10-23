@@ -10,6 +10,7 @@ import CreatorCard from '@/components/public/CreatorCard';
 import InquiryForm from '@/components/public/InquiryForm';
 import WhatsAppCTA from '@/components/public/WhatsAppCTA';
 import Footer from '@/components/public/Footer';
+import TripOverviewTable from '@/components/public/TripOverviewTable';
 import { ChevronRight, Clock, MapPin, Calendar, Compass, Share2 } from 'lucide-react';
 
 export const revalidate = 0;
@@ -147,12 +148,21 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           {/* LEFT COLUMN: 60% width Editorial Story */}
           <div className="lg:col-span-7">
+            {/* 1. Quick Trip Overview Section (if enabled in Admin) */}
+            <TripOverviewTable
+              overview={(plan as any).overview}
+              planTitle={plan.title}
+              destination={plan.destination}
+            />
+
             {/* Lead Summary in Serif Italic */}
-            <div className="bg-white rounded-2xl border border-brand-stone p-6 sm:p-8 mb-8 shadow-subtle">
-              <p className="font-serif italic text-lg sm:text-xl text-brand-charcoal leading-relaxed">
-                "{plan.shortDescription}"
-              </p>
-            </div>
+            {plan.shortDescription && (
+              <div className="bg-white rounded-2xl border border-brand-stone p-6 sm:p-8 mb-8 shadow-subtle">
+                <p className="font-serif italic text-lg sm:text-xl text-brand-charcoal leading-relaxed">
+                  "{plan.shortDescription}"
+                </p>
+              </div>
+            )}
 
             {/* Rich Editorial Content Flow */}
             <div

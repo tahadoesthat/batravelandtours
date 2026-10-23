@@ -10,6 +10,62 @@ interface MultiImageUploaderProps {
   onPrimeChange: (url: string) => void;
 }
 
+async function compressImage(file: File, maxDim = 1920, quality = 0.82): Promise<File> {
+  // If file is already small (under 300KB), return as is
+  if (file.size <= 300 * 1024) return file;
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(file);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              resolve(file);
+              return;
+            }
+            const compressedFile = new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            });
+            resolve(compressedFile);
+          },
+          'image/jpeg',
+          quality
+        );
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target?.result as string;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function MultiImageUploader({
   images,
   primeThumbnail,
@@ -36,13 +92,16 @@ export default function MultiImageUploader({
     try {
       const uploadedUrls: string[] = [];
 
-      for (const file of filesToUpload) {
-        if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-          throw new Error(`File "${file.name}" is not a valid format (JPG, PNG, or WebP).`);
+      for (const rawFile of filesToUpload) {
+        if (!['image/jpeg', 'image/png', 'image/webp'].includes(rawFile.type)) {
+          throw new Error(`File "${rawFile.name}" is not a valid format (JPG, PNG, or WebP).`);
         }
-        if (file.size > 10 * 1024 * 1024) {
-          throw new Error(`File "${file.name}" exceeds the 10MB limit.`);
+        if (rawFile.size > 20 * 1024 * 1024) {
+          throw new Error(`File "${rawFile.name}" exceeds the 20MB limit.`);
         }
+
+        // Compress large camera photos on client to prevent payload timeout & Vercel 4.5MB limit
+        const file = await compressImage(rawFile);
 
         const formData = new FormData();
         formData.append('file', file);
@@ -52,8 +111,25 @@ export default function MultiImageUploader({
           body: formData,
         });
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Upload failed');
+        // Safely parse JSON response to prevent "Unexpected token < in JSON"
+        const text = await res.text();
+        let data: any = {};
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          throw new Error(
+            `Upload error (${res.status}): Server returned a non-JSON response for "${rawFile.name}". Please ensure image is under 4.5MB.`
+          );
+        }
+
+        if (!res.ok) {
+          throw new Error(data.error || `Upload failed with status ${res.status}`);
+        }
+
+        if (!data.url) {
+          throw new Error('Upload succeeded but no image URL was returned.');
+        }
+
         uploadedUrls.push(data.url);
       }
 

@@ -68,6 +68,7 @@ export async function POST(request: Request) {
       shortDescription,
       content,
       status = 'DRAFT',
+      overview,
     } = body;
 
     if (!title || !destination || !shortDescription) {
@@ -97,6 +98,7 @@ export async function POST(request: Request) {
           content: content || '',
           readingTime,
           status: status === 'PUBLISHED' ? 'PUBLISHED' : 'DRAFT',
+          overview: overview ?? undefined,
         },
       }),
       prisma.changelogEntry.create({

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Loader2, Sparkles, AlertCircle } from 'lucide-react';
 import MultiImageUploader from './MultiImageUploader';
 import TiptapEditor from './TiptapEditor';
+import TripOverviewEditor, { TripOverviewData } from './TripOverviewEditor';
 
 const DESTINATION_SUGGESTIONS = [
   'Amalfi Coast, Italy',
@@ -37,6 +38,7 @@ export default function PlanModal({
   const [images, setImages] = useState<string[]>([]);
   const [primeThumbnail, setPrimeThumbnail] = useState('');
   const [status, setStatus] = useState<'DRAFT' | 'PUBLISHED'>('DRAFT');
+  const [overview, setOverview] = useState<TripOverviewData>({ enabled: false });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +53,7 @@ export default function PlanModal({
       setImages(planToEdit.images || []);
       setPrimeThumbnail(planToEdit.primeThumbnail || '');
       setStatus(planToEdit.status || 'DRAFT');
+      setOverview(planToEdit.overview || { enabled: false });
     } else {
       setTitle('');
       setDestination('');
@@ -60,6 +63,7 @@ export default function PlanModal({
       setImages([]);
       setPrimeThumbnail('');
       setStatus('DRAFT');
+      setOverview({ enabled: false });
     }
     setError(null);
   }, [planToEdit, isOpen]);
@@ -101,10 +105,19 @@ export default function PlanModal({
           images,
           primeThumbnail: primeThumbnail || images[0] || '',
           status: finalStatus,
+          overview: overview.enabled ? overview : null,
         }),
       });
 
-      const data = await res.json();
+      // Safely parse JSON response to prevent unhandled "unexpected token" JSON errors
+      const responseText = await res.text();
+      let data: any = {};
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch {
+        throw new Error(`Server returned invalid response (Status ${res.status}).`);
+      }
+
       if (!res.ok) {
         throw new Error(data.error || 'Failed to save travel plan.');
       }
@@ -252,7 +265,10 @@ export default function PlanModal({
             </div>
           </div>
 
-          {/* 4. Rich Text Editorial Composer ("Detailed Breakdown") */}
+          {/* 4. Quick Trip Overview Table (Optional Dossier Table) */}
+          <TripOverviewEditor data={overview} onChange={(upd) => setOverview(upd)} />
+
+          {/* 5. Rich Text Editorial Composer ("Detailed Breakdown") */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-brand-charcoal mb-2">
               Detailed Breakdown & Editorial Content
