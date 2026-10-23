@@ -245,9 +245,10 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {morePlans.map((item) => (
-                <article
+                <Link
                   key={item.id}
-                  className="bg-white rounded-2xl overflow-hidden border border-brand-stone hover:shadow-elevated transition duration-300 group flex flex-col"
+                  href={`/plans/${item.slug}`}
+                  className="bg-white rounded-2xl overflow-hidden border border-brand-stone hover:shadow-elevated transition duration-300 group flex flex-col cursor-pointer block"
                 >
                   <div className="relative h-44 overflow-hidden">
                     <img
@@ -266,7 +267,7 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
                         <span>{item.destination}</span>
                       </div>
                       <h4 className="font-serif font-bold text-lg text-brand-charcoal group-hover:text-brand-emerald transition line-clamp-2 mb-2">
-                        <Link href={`/plans/${item.slug}`}>{item.title}</Link>
+                        {item.title}
                       </h4>
                       <p className="text-xs text-brand-slate line-clamp-2 font-light">
                         {item.shortDescription}
@@ -284,7 +285,7 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
                       <span>{item.readingTime} min</span>
                     </div>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           </section>

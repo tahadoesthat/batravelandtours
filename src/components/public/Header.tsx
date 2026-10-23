@@ -39,6 +39,9 @@ export default function Header() {
   const isVisasActive = pathname?.startsWith('/visas');
   const isHomeActive = pathname === '/';
 
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const lastScrollY = useRef(0);
+
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -56,10 +59,51 @@ export default function Header() {
     setVisasDropdownOpen(false);
   }, [pathname]);
 
+  // Smart Hide on Scroll Down, Show on Scroll Up
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+
+          // Always stay visible if mobile menu or visas dropdown is open
+          if (mobileMenuOpen || visasDropdownOpen) {
+            setHeaderVisible(true);
+            lastScrollY.current = currentScrollY;
+            ticking = false;
+            return;
+          }
+
+          // Near top: always keep header visible
+          if (currentScrollY <= 40) {
+            setHeaderVisible(true);
+          } else if (currentScrollY > lastScrollY.current && currentScrollY - lastScrollY.current > 5) {
+            // Scrolling down -> hide completely
+            setHeaderVisible(false);
+          } else if (currentScrollY < lastScrollY.current) {
+            // Scrolling up even a bit -> show header
+            setHeaderVisible(true);
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [mobileMenuOpen, visasDropdownOpen]);
+
   return (
     <>
       <header
-        className="bg-white/95 backdrop-blur sticky top-0 z-40 border-b border-brand-stone shadow-sm"
+        className={`bg-white/95 backdrop-blur sticky top-0 z-40 border-b border-brand-stone shadow-sm transition-transform duration-300 ease-in-out ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
         data-purpose="site-navigation"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-3.5 flex items-center justify-between">

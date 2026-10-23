@@ -104,9 +104,10 @@ export default function LatestPostsGrid({
 
       {/* Main Grid: 1 Large Left Card (5 cols) + 4 Right Compact Cards (7 cols in 2x2) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-        {/* Large Featured Card (Left Column) */}
-        <article
-          className="lg:col-span-5 relative rounded-2xl overflow-hidden min-h-[460px] lg:min-h-[520px] shadow-sm hover:shadow-elevated transition duration-500 group flex flex-col justify-end p-6 sm:p-8"
+        {/* Large Featured Card (Left Column) - Entire card clickable */}
+        <Link
+          href={`/plans/${featured.slug}`}
+          className="lg:col-span-5 relative rounded-2xl overflow-hidden min-h-[460px] lg:min-h-[520px] shadow-sm hover:shadow-elevated transition duration-500 group flex flex-col justify-end p-6 sm:p-8 cursor-pointer block"
           data-purpose="featured-post-card"
         >
           <img
@@ -129,10 +130,8 @@ export default function LatestPostsGrid({
               </span>
             </div>
 
-            <h3 className="font-serif text-2xl sm:text-3xl font-bold leading-snug mb-2 card-text-shadow">
-              <Link href={`/plans/${featured.slug}`} className="hover:text-emerald-200 transition">
-                {featured.title}
-              </Link>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold leading-snug mb-2 card-text-shadow group-hover:text-emerald-200 transition">
+              {featured.title}
             </h3>
 
             <p className="text-gray-200 text-xs sm:text-sm mb-5 font-light line-clamp-2">
@@ -159,14 +158,15 @@ export default function LatestPostsGrid({
               </span>
             </div>
           </div>
-        </article>
+        </Link>
 
-        {/* 4 Compact Cards (Right Column: 2x2 grid) */}
+        {/* 4 Compact Cards (Right Column: 2x2 grid) - Entire card clickable */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {gridItems.map((plan) => (
-            <article
+            <Link
               key={plan.id}
-              className="relative rounded-2xl overflow-hidden min-h-[250px] shadow-sm hover:shadow-elevated transition duration-500 group flex flex-col justify-end p-5"
+              href={`/plans/${plan.slug}`}
+              className="relative rounded-2xl overflow-hidden min-h-[250px] shadow-sm hover:shadow-elevated transition duration-500 group flex flex-col justify-end p-5 cursor-pointer block"
               data-purpose="grid-post-card"
             >
               <img
@@ -184,10 +184,8 @@ export default function LatestPostsGrid({
                     {plan.destination}
                   </span>
                 </div>
-                <h4 className="font-serif text-lg font-bold leading-tight mb-3">
-                  <Link href={`/plans/${plan.slug}`} className="hover:text-emerald-200 transition">
-                    {plan.title}
-                  </Link>
+                <h4 className="font-serif text-lg font-bold leading-tight mb-3 group-hover:text-emerald-200 transition">
+                  {plan.title}
                 </h4>
                 <div className="flex items-center justify-between text-[10px] text-gray-300 pt-2 border-t border-white/10">
                   <div className="flex items-center space-x-2">
@@ -201,18 +199,19 @@ export default function LatestPostsGrid({
                   <span>{formatDate(plan.createdAt)}</span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
 
-      {/* Additional remaining plans if any */}
+      {/* Additional remaining plans if any - Entire card clickable */}
       {remainingItems.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           {remainingItems.map((plan) => (
-            <article
+            <Link
               key={plan.id}
-              className="bg-white rounded-2xl overflow-hidden border border-brand-stone hover:shadow-elevated transition group flex flex-col"
+              href={`/plans/${plan.slug}`}
+              className="bg-white rounded-2xl overflow-hidden border border-brand-stone hover:shadow-elevated transition group flex flex-col cursor-pointer block"
             >
               <div className="relative h-48 overflow-hidden">
                 <img
@@ -231,7 +230,7 @@ export default function LatestPostsGrid({
                     <span>{plan.destination}</span>
                   </div>
                   <h4 className="font-serif font-bold text-xl text-brand-charcoal group-hover:text-brand-emerald transition mb-2">
-                    <Link href={`/plans/${plan.slug}`}>{plan.title}</Link>
+                    {plan.title}
                   </h4>
                   <p className="text-xs text-brand-slate line-clamp-2 leading-relaxed">
                     {plan.shortDescription}
@@ -244,7 +243,7 @@ export default function LatestPostsGrid({
                   </span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       )}

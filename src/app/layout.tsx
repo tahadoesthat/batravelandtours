@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Playfair_Display, Plus_Jakarta_Sans, Caveat } from 'next/font/google';
+import React, { Suspense } from 'react';
 import './globals.css';
 import AnalyticsTracker from '@/components/public/AnalyticsTracker';
+import TopLoadingBar from '@/components/public/TopLoadingBar';
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -56,6 +58,9 @@ export default function RootLayout({
       <body
         className={`${plusJakarta.variable} ${playfair.variable} ${caveat.variable} font-sans bg-brand-alabaster text-brand-charcoal min-h-screen selection:bg-brand-emerald selection:text-white`}
       >
+        <Suspense fallback={null}>
+          <TopLoadingBar />
+        </Suspense>
         <AnalyticsTracker />
         {children}
       </body>
