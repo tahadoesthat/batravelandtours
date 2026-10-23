@@ -86,3 +86,14 @@ model SiteVisit {
 
   @@index([visitedAt])
 }
+
+model MediaFile {
+  id        String   @id @default(cuid())
+  filename  String
+  mimeType  String
+  data      Bytes
+  size      Int
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

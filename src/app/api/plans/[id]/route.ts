@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { generateUniqueSlug } from '@/lib/slugify';
 import { calculateReadingTime } from '@/lib/utils';
@@ -97,6 +98,16 @@ export async function PUT(
         },
       }),
     ]);
+
+    try {
+      revalidatePath('/');
+      revalidatePath(`/plans/${newSlug}`);
+      if (newSlug !== existing.slug) {
+        revalidatePath(`/plans/${existing.slug}`);
+      }
+    } catch (e) {
+      console.warn('revalidatePath error:', e);
+    }
 
     return NextResponse.json({ success: true, plan: updatedPlan, changelog });
   } catch (error: any) {
