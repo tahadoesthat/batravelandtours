@@ -65,6 +65,13 @@ export default function TiptapEditor({ content, onChange }: TiptapEditorProps) {
     },
   });
 
+  // Synchronize content when editing an existing post or when content prop changes
+  React.useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content || '');
+    }
+  }, [content, editor]);
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;

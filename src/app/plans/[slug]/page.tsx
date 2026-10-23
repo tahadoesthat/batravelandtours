@@ -188,9 +188,9 @@ export default async function PlanDetailPage({ params }: PlanDetailPageProps) {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: 40% width Auto-Adjusting Masonry Gallery (Desktop Sticky) */}
-          <div className="hidden lg:block lg:col-span-5 sticky top-24 space-y-6">
-            <div className="bg-white rounded-2xl border border-brand-stone p-6 shadow-subtle max-h-[82vh] overflow-y-auto pr-3">
+          {/* RIGHT COLUMN: 40% width Photo Visuals Gallery & Highlights */}
+          <div className="hidden lg:block lg:col-span-5 space-y-6">
+            <div className="bg-white rounded-2xl border border-brand-stone p-6 shadow-subtle">
               <PlanGalleryMasonry images={allImages} title={plan.title} />
             </div>
 
