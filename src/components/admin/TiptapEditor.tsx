@@ -27,6 +27,8 @@ const BRAND_COLORS = [
   { name: 'Slate Gray', hex: '#4A5568' },
 ];
 
+import { convertToWebP } from '@/lib/imageOptimizer';
+
 interface TiptapEditorProps {
   content: string;
   onChange: (html: string) => void;
@@ -73,11 +75,14 @@ export default function TiptapEditor({ content, onChange }: TiptapEditorProps) {
   }, [content, editor]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !editor) return;
+    const rawFile = e.target.files?.[0];
+    if (!rawFile || !editor) return;
 
     setUploadingImage(true);
     try {
+      // Automatically convert heavy photos to WebP before uploading
+      const file = await convertToWebP(rawFile, { maxDim: 1600, quality: 0.82 });
+
       const formData = new FormData();
       formData.append('file', file);
 
@@ -86,7 +91,14 @@ export default function TiptapEditor({ content, onChange }: TiptapEditorProps) {
         body: formData,
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error('Server returned invalid response during upload.');
+      }
+
       if (!res.ok) throw new Error(data.error || 'Upload failed');
 
       editor.chain().focus().setImage({ src: data.url, alt: file.name }).run();

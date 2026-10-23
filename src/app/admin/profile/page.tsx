@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Camera, Check, Loader2, AlertCircle } from 'lucide-react';
+import { convertToWebP } from '@/lib/imageOptimizer';
 
 export default function AdminProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,13 +42,16 @@ export default function AdminProfilePage() {
   }, []);
 
   const handleAvatarFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
 
     setUploadingAvatar(true);
     setError(null);
 
     try {
+      // Automatically downscale and convert avatar to WebP
+      const file = await convertToWebP(rawFile, { maxDim: 800, quality: 0.85 });
+
       const formData = new FormData();
       formData.append('file', file);
 
@@ -56,7 +60,14 @@ export default function AdminProfilePage() {
         body: formData,
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: any = {};
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        throw new Error('Server returned invalid response during avatar upload.');
+      }
+
       if (!res.ok) throw new Error(data.error || 'Avatar upload failed');
 
       setAvatarUrl(data.url);
